@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		650E1B58CFA62BA5577C0AE1 /* Pods_Secure_Login.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DA4D99B3A83ADF5BD3E1D08 /* Pods_Secure_Login.framework */; };
+		6D6774D822B9E413009318AA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6D6774D722B9E413009318AA /* GoogleService-Info.plist */; };
 		6DD4100A22B874EA0095BDEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD4100922B874EA0095BDEC /* AppDelegate.swift */; };
 		6DD4100C22B874EA0095BDEC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD4100B22B874EA0095BDEC /* ViewController.swift */; };
 		6DD4100F22B874EA0095BDEC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DD4100D22B874EA0095BDEC /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 		135BEFA6F1286638BD263C2D /* Pods-Secure Login.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Secure Login.debug.xcconfig"; path = "Target Support Files/Pods-Secure Login/Pods-Secure Login.debug.xcconfig"; sourceTree = "<group>"; };
 		2DA4D99B3A83ADF5BD3E1D08 /* Pods_Secure_Login.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Secure_Login.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		31334A46ED24E1DE6DDC15BA /* Pods-Secure Login.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Secure Login.release.xcconfig"; path = "Target Support Files/Pods-Secure Login/Pods-Secure Login.release.xcconfig"; sourceTree = "<group>"; };
+		6D6774D722B9E413009318AA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Volumes/VMware Shared Folders/Vmware Share/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6DD4100622B874EA0095BDEC /* Secure Login.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Secure Login.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DD4100922B874EA0095BDEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6DD4100B22B874EA0095BDEC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				6DD4100D22B874EA0095BDEC /* Main.storyboard */,
 				6DD4101022B874EC0095BDEC /* Assets.xcassets */,
 				6DD4101222B874EC0095BDEC /* LaunchScreen.storyboard */,
+				6D6774D722B9E413009318AA /* GoogleService-Info.plist */,
 				6DD4101522B874EC0095BDEC /* Info.plist */,
 			);
 			path = "Secure Login";
@@ -153,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6DD4101422B874EC0095BDEC /* LaunchScreen.storyboard in Resources */,
+				6D6774D822B9E413009318AA /* GoogleService-Info.plist in Resources */,
 				6DD4101122B874EC0095BDEC /* Assets.xcassets in Resources */,
 				6DD4100F22B874EA0095BDEC /* Main.storyboard in Resources */,
 			);
