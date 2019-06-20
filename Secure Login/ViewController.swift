@@ -22,6 +22,9 @@ class ViewController: UIViewController {
     {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        textUserName.underlined()
+        textPassword.underlined()
+        //funcTextFieldImage()
     }
     
     
@@ -44,8 +47,8 @@ class ViewController: UIViewController {
     
     @IBAction func btnActionSignUp(_ sender: Any)
     {
-        loginSignup = "signup"
-        funcPasEncription()
+       // loginSignup = "signup"
+        //funcPasEncription()
     }
 }
 
@@ -53,7 +56,7 @@ class ViewController: UIViewController {
 extension ViewController
 {
     //signup
-    func funcSignUp(email: String, password: String)
+    /*func funcSignUp(email: String, password: String)
     {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             
@@ -79,7 +82,7 @@ extension ViewController
             })
             try! Auth.auth().signOut()
         }
-    }
+    }*/
     
     //login
     func funcLogin(email: String, password: String)
@@ -116,32 +119,48 @@ extension ViewController
         var email = ""
         if let pass = textPassword.text, let user = textUserName.text
         {
+            if pass == "" || user == ""
+            {
+                funcAlert(title: "ooops!", message: "add email id and password")
+                return
+            }
             email = user
             password = pass
             salt = user
         }
-        else
-        {
-            print("no text")
-            return
-        }
         
-        do {
-            let password: Array<UInt8> = Array(password.utf8)
-            let salt: Array<UInt8> = Array(salt.utf8)
+        //background running
+        DispatchQueue.global(qos: .utility).async
+        {
+            do
+            {
+                let password: Array<UInt8> = Array(password.utf8)
+                let salt: Array<UInt8> = Array(salt.utf8)
             
-            let value = try PKCS5.PBKDF2(password: password, salt: salt, iterations: 50000, variant: .sha512).calculate()
-            let encripted = value.toHexString()
-            print("--------",value.toHexString())
-            if loginSignup == "login"
-            {
-                funcLogin(email: email, password: encripted)
-            }
-            else
-            {
-                funcSignUp(email: email, password: encripted)
-            }
-        } catch {}
+                let value = try PKCS5.PBKDF2(password: password, salt: salt, iterations: 50000, variant: .sha512).calculate()
+                let encripted = value.toHexString()
+                print("--------",value.toHexString())
+                //if self.loginSignup == "login"
+                //{
+                    self.funcLogin(email: email, password: encripted)
+                //}
+            } catch {print("---------errr")}
+        }
+    }
+    
+    func funcTextFieldImage()
+    {
+        textUserName.leftViewMode = UITextField.ViewMode.always
+        var imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: textUserName.frame.height, height: textUserName.frame.height))
+        var image = UIImage(named: "email1X.png")
+        imageView.image = image
+        textUserName.leftView = imageView
+        
+        textPassword.leftViewMode = UITextField.ViewMode.always
+        imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: textPassword.frame.height, height: textPassword.frame.height))
+        image = UIImage(named: "showpas1X.png")
+        imageView.image = image
+        textPassword.leftView = imageView
     }
     
     //alert
