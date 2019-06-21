@@ -10,8 +10,10 @@ import UIKit
 import Firebase
 import CryptoSwift
 
-class SignUpViewController: UIViewController {
-
+class SignUpViewController: UIViewController
+{
+    let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+    
     @IBOutlet weak var textEmail: UITextField!
     @IBOutlet weak var textPassword: UITextField!
     @IBOutlet weak var textConfirmPassword: UITextField!
@@ -27,7 +29,7 @@ class SignUpViewController: UIViewController {
         
         textEmail.attributedPlaceholder = NSAttributedString(string: "email id", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
         textPassword.attributedPlaceholder = NSAttributedString(string: "password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
-        textConfirmPassword.attributedPlaceholder = NSAttributedString(string: "email id", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
+        textConfirmPassword.attributedPlaceholder = NSAttributedString(string: "confirm password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -78,6 +80,7 @@ extension SignUpViewController
                     let passwordValid = funcIsPasswordValid(password)
                     if passwordValid == true
                     {
+                        funcActivityIndicator()
                         funcPasEncription(email: email, password: password)
                     }
                     else
@@ -94,31 +97,15 @@ extension SignUpViewController
     }
     
     //password stregnth check
-    func funcIsPasswordValid(_ password : String) -> Bool{
+    func funcIsPasswordValid(_ password : String) -> Bool
+    {
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")
-        //let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$#!%*?&`~^-_{};:',.<>])[A-Za-z\\d$@$#!%*?&`~^-_{};:',.<>]{8,}")
-        //let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8}$")
         return passwordTest.evaluate(with: password)
     }
 
     //encription
     func funcPasEncription(email: String, password: String)
     {
-        /*var salt = ""
-        var password = ""
-        var email = ""
-        if let pass = textPassword.text, let user = textUserName.text
-        {
-            if pass == "" || user == ""
-            {
-                funcAlert(title: "ooops!", message: "add email id and password")
-                return
-            }
-            email = user
-            password = pass
-            salt = user
-        }*/
-        
         //background running
         DispatchQueue.global(qos: .utility).async
             {
@@ -127,11 +114,11 @@ extension SignUpViewController
                     let password: Array<UInt8> = Array(password.utf8)
                     let salt: Array<UInt8> = Array(email.utf8)
                     
-                    let value = try PKCS5.PBKDF2(password: password, salt: salt, iterations: 50000, variant: .sha512).calculate()
+                    let value = try Scrypt(password: password, salt: salt, dkLen: 128, N: 16384, r: 8, p: 1).calculate()
                     let encripted = value.toHexString()
                     print("--------",value.toHexString())
                     self.funcSignUp(email: email, password: encripted)
-                } catch {print("---------errr")}
+                } catch {self.activityIndicator.removeFromSuperview();print("---------errr")}
         }
     }
     
@@ -143,6 +130,7 @@ extension SignUpViewController
             guard let user = authResult?.user, error == nil else
             {
                 print("sign uppp errrr", error!.localizedDescription)
+                self.activityIndicator.removeFromSuperview()
                 self.funcAlert(title: "SignUp Failed", message: error?.localizedDescription ?? "SignUp failed please check email id is vaild")
                 return
             }
@@ -152,11 +140,13 @@ extension SignUpViewController
                 if let err = error?.localizedDescription
                 {
                     print("vemail fail",err)
+                    self.activityIndicator.removeFromSuperview()
                     self.funcAlert(title: "acoount creation failed", message: err)
                 }
                 else
                 {
                     print("vvvv emaill send")
+                    self.activityIndicator.removeFromSuperview()
                     self.funcAlert(title: "account created", message: "verification email send to \(user.email!). please verify to use your account")
                 }
             })
@@ -171,6 +161,15 @@ extension SignUpViewController
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         let nextViewController = storyBoard.instantiateViewController(withIdentifier: "login") as! ViewController
         self.present(nextViewController, animated:true, completion:nil)
+    }
+    
+    //activity indicator
+    func funcActivityIndicator()
+    {
+        activityIndicator.center = self.view.center
+        activityIndicator.color = .black
+        activityIndicator.startAnimating()
+        self.view.addSubview(activityIndicator)
     }
     
     //alert

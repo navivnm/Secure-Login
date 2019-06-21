@@ -24,11 +24,11 @@ class ViewController: UIViewController
     {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
         textUserName.underlined()
         textPassword.underlined()
         textUserName.attributedPlaceholder = NSAttributedString(string: "email id", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
         textPassword.attributedPlaceholder = NSAttributedString(string: "password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
-        //btnSignUp.setTitleColor(.cyan, for: .normal)
         
         //notificationcenter for keyboard
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -50,12 +50,13 @@ class ViewController: UIViewController
     
     @IBAction func btnActionSignUp(_ sender: Any)
     {
-       // loginSignup = "signup"
-        //funcPasEncription()
+
     }
+    
     @IBAction func btnActionLogout(_ sender: Any)
     {
-        let when = DispatchTime.now() + 0.2 // change 2 to desired number of seconds
+        // execute after 0.2 second
+        let when = DispatchTime.now() + 0.2
         DispatchQueue.main.asyncAfter(deadline: when)
         {
             //code with delay
@@ -105,11 +106,25 @@ extension ViewController
     //encription
     func funcPasEncription()
     {
-        var salt = "naveenvijayios@gmail.com"
-        var password = "12345678aA@"
-        let email = "naveenvijayios@gmail.com"
+        var salt = ""
+        var password = ""
+        var email = ""
 
-        //background running
+         if let pass = textPassword.text, let user = textUserName.text
+         {
+            if pass == "" || user == ""
+         {
+            activityIndicator.removeFromSuperview()
+            funcAlert(title: "ooops!", message: "add email id and password")
+            return
+         }
+            email = user
+            password = pass
+            salt = user
+         }
+        
+        
+        //background thread
         DispatchQueue.global(qos: .utility).async
         {
             do
@@ -117,14 +132,11 @@ extension ViewController
                 let password: Array<UInt8> = Array(password.utf8)
                 let salt: Array<UInt8> = Array(salt.utf8)
             
-                let value = try PKCS5.PBKDF2(password: password, salt: salt, iterations: 50000, variant: .sha512).calculate()
+                let value = try Scrypt(password: password, salt: salt, dkLen: 128, N: 16384, r: 8, p: 1).calculate()
                 let encripted = value.toHexString()
                 print("--------",value.toHexString())
-                //if self.loginSignup == "login"
-                //{
-                    self.funcLogin(email: email, password: encripted)
-                //}
-            } catch {print("---------errr")}
+                self.funcLogin(email: email, password: encripted)
+            } catch {self.activityIndicator.removeFromSuperview(); print("---------errr")}
         }
     }
     
@@ -137,7 +149,8 @@ extension ViewController
         self.view.addSubview(activityIndicator)
     }
     
-    func funcTextFieldImage()
+    //text field image
+    /*func funcTextFieldImage()
     {
         textUserName.leftViewMode = UITextField.ViewMode.always
         var imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: textUserName.frame.height, height: textUserName.frame.height))
@@ -150,7 +163,7 @@ extension ViewController
         image = UIImage(named: "showpas1X.png")
         imageView.image = image
         textPassword.leftView = imageView
-    }
+    }*/
     
     //alert
     func funcAlert(title: String, message: String)
