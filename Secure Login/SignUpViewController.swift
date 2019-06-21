@@ -15,6 +15,7 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var textEmail: UITextField!
     @IBOutlet weak var textPassword: UITextField!
     @IBOutlet weak var textConfirmPassword: UITextField!
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -23,13 +24,18 @@ class SignUpViewController: UIViewController {
         textEmail.underlined()
         textPassword.underlined()
         textConfirmPassword.underlined()
-       /* let when = DispatchTime.now() + 3
-        DispatchQueue.main.asyncAfter(deadline: when) {
-            print("okkkk")
-            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "login") as! ViewController
-            self.present(nextViewController, animated:true, completion:nil)
-        }*/
+        
+        textEmail.attributedPlaceholder = NSAttributedString(string: "email id", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
+        textPassword.attributedPlaceholder = NSAttributedString(string: "password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
+        textConfirmPassword.attributedPlaceholder = NSAttributedString(string: "email id", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
+        self.view.endEditing(true)
     }
     
     @IBAction func btnSignUp(_ sender: Any)
@@ -174,5 +180,23 @@ extension SignUpViewController
         let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alert.addAction(alertAction)
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+//move screen when keyboard popup
+extension SignUpViewController
+{
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
 }

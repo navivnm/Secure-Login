@@ -10,13 +10,15 @@ import UIKit
 import CryptoSwift
 import Firebase
 
-class ViewController: UIViewController {
-
-    //var handle: AuthStateDidChangeListenerHandle?
-    var loginSignup = ""
-
+class ViewController: UIViewController
+{
+    let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+    
     @IBOutlet weak var textUserName: UITextField!
     @IBOutlet weak var textPassword: UITextField!
+    @IBOutlet weak var btnLogin: UIButton!
+    @IBOutlet weak var btnSignUp: UIButton!
+    @IBOutlet weak var viewLogin: UIView!
     
     override func viewDidLoad()
     {
@@ -24,24 +26,25 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         textUserName.underlined()
         textPassword.underlined()
-        //funcTextFieldImage()
+        textUserName.attributedPlaceholder = NSAttributedString(string: "email id", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
+        textPassword.attributedPlaceholder = NSAttributedString(string: "password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.brown])
+        //btnSignUp.setTitleColor(.cyan, for: .normal)
+        
+        //notificationcenter for keyboard
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        //hide keyboard when touch outside
+        self.view.endEditing(true)
+    }
 
-    /*override func viewWillAppear(_ animated: Bool) {
-        handle = Auth.auth().addStateDidChangeListener { (auth, user) in
-            // ...
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        Auth.auth().removeStateDidChangeListener(handle!)
-    }*/
     
     @IBAction func btnActionLogin(_ sender: Any)
     {
-        loginSignup = "login"
+        self.view.endEditing(true)
+        funcActivityIndicator()
         funcPasEncription()
     }
     
@@ -50,40 +53,21 @@ class ViewController: UIViewController {
        // loginSignup = "signup"
         //funcPasEncription()
     }
+    @IBAction func btnActionLogout(_ sender: Any)
+    {
+        let when = DispatchTime.now() + 0.2 // change 2 to desired number of seconds
+        DispatchQueue.main.asyncAfter(deadline: when)
+        {
+            //code with delay
+            self.viewLogin.isHidden = true
+            try! Auth.auth().signOut()
+        }
+    }
 }
 
 //functions
 extension ViewController
 {
-    //signup
-    /*func funcSignUp(email: String, password: String)
-    {
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-            
-            guard let user = authResult?.user, error == nil else
-            {
-                print("sign uppp errrr", error!.localizedDescription)
-                self.funcAlert(title: "SignUp Failed", message: error?.localizedDescription ?? "SignUp failed please check email id is vaild")
-                return
-            }
-            //print("\(user.email!) created")
-            
-            Auth.auth().currentUser?.sendEmailVerification(completion: { (error) in
-                if let err = error?.localizedDescription
-                {
-                    print("vemail fail",err)
-                    self.funcAlert(title: "acoount creation failed", message: err)
-                }
-                else
-                {
-                    print("vvvv emaill send")
-                    self.funcAlert(title: "account created", message: "verification email send to \(user.email!). please verify to use your account")
-                }
-            })
-            try! Auth.auth().signOut()
-        }
-    }*/
-    
     //login
     func funcLogin(email: String, password: String)
     {
@@ -91,6 +75,7 @@ extension ViewController
 
             if let error = error
             {
+                self?.activityIndicator.removeFromSuperview()
                 print("sign in errrrr",error.localizedDescription)
                 self?.funcAlert(title: "Login Failed", message: error.localizedDescription)
                 return
@@ -100,9 +85,15 @@ extension ViewController
                 if Auth.auth().currentUser?.isEmailVerified == true
                 {
                     print("logiinnnnnnnnnnn")
+                    //self?.viewLogin.isHidden = false
+                    self?.activityIndicator.removeFromSuperview()
+                    let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+                    let nextViewController = storyBoard.instantiateViewController(withIdentifier: "inlogin") as! LoginViewController
+                    self?.present(nextViewController, animated:true, completion:nil)
                 }
                 else
                 {
+                    self?.activityIndicator.removeFromSuperview()
                     print("verify email")
                     self?.funcAlert(title: "Caution", message: "verification email send to \(email). please verify to use your account")
                 }
@@ -114,21 +105,10 @@ extension ViewController
     //encription
     func funcPasEncription()
     {
-        var salt = ""
-        var password = ""
-        var email = ""
-        if let pass = textPassword.text, let user = textUserName.text
-        {
-            if pass == "" || user == ""
-            {
-                funcAlert(title: "ooops!", message: "add email id and password")
-                return
-            }
-            email = user
-            password = pass
-            salt = user
-        }
-        
+        var salt = "naveenvijayios@gmail.com"
+        var password = "12345678aA@"
+        let email = "naveenvijayios@gmail.com"
+
         //background running
         DispatchQueue.global(qos: .utility).async
         {
@@ -146,6 +126,15 @@ extension ViewController
                 //}
             } catch {print("---------errr")}
         }
+    }
+    
+    //activity indicator
+    func funcActivityIndicator()
+    {
+        activityIndicator.center = self.view.center
+        activityIndicator.color = .black
+        activityIndicator.startAnimating()
+        self.view.addSubview(activityIndicator)
     }
     
     func funcTextFieldImage()
@@ -173,3 +162,20 @@ extension ViewController
     }
 }
 
+//move screen when keyboard popup
+extension ViewController
+{
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
+    }
+}
