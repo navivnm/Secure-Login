@@ -138,7 +138,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kph-sq-zDv">
-                                <rect key="frame" x="8" y="537" width="359" height="30"/>
+                                <rect key="frame" x="8" y="629" width="359" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.34618340260000002" blue="0.043485353800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <state key="normal" title="Logout">
                                     <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -147,23 +147,36 @@
                                     <action selector="btnActionLogin:" destination="C1x-gI-oMd" eventType="touchUpInside" id="D6R-3b-mnS"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="justified" translatesAutoresizingMaskIntoConstraints="NO" id="6fJ-v3-R2v">
+                                <rect key="frame" x="8" y="28" width="359" height="593"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="6fJ-v3-R2v" firstAttribute="leading" secondItem="yEG-RA-LIB" secondAttribute="leading" constant="8" id="8bt-iJ-BN2"/>
                             <constraint firstAttribute="bottomMargin" secondItem="SFR-pr-CNp" secondAttribute="bottom" id="CPd-QP-6Nd"/>
-                            <constraint firstItem="yEG-RA-LIB" firstAttribute="bottom" secondItem="kph-sq-zDv" secondAttribute="bottom" constant="100" id="Cbf-ax-dpc"/>
+                            <constraint firstItem="yEG-RA-LIB" firstAttribute="bottom" secondItem="kph-sq-zDv" secondAttribute="bottom" constant="8" id="Cbf-ax-dpc"/>
                             <constraint firstItem="kph-sq-zDv" firstAttribute="leading" secondItem="yEG-RA-LIB" secondAttribute="leading" constant="8" id="Qx2-bd-2hk"/>
                             <constraint firstItem="SFR-pr-CNp" firstAttribute="leading" secondItem="2G1-jF-gzR" secondAttribute="leading" id="TNF-ZD-hvs"/>
+                            <constraint firstItem="6fJ-v3-R2v" firstAttribute="top" secondItem="yEG-RA-LIB" secondAttribute="top" constant="8" id="TXJ-1v-hav"/>
                             <constraint firstItem="kph-sq-zDv" firstAttribute="centerX" secondItem="2G1-jF-gzR" secondAttribute="centerX" id="Z6y-2q-MAQ"/>
+                            <constraint firstItem="yEG-RA-LIB" firstAttribute="trailing" secondItem="6fJ-v3-R2v" secondAttribute="trailing" constant="8" id="gaU-dg-xhi"/>
                             <constraint firstAttribute="trailing" secondItem="SFR-pr-CNp" secondAttribute="trailing" id="gjb-yg-3jB"/>
+                            <constraint firstItem="kph-sq-zDv" firstAttribute="top" secondItem="6fJ-v3-R2v" secondAttribute="bottom" constant="8" id="ljC-We-FSP"/>
                             <constraint firstItem="SFR-pr-CNp" firstAttribute="top" secondItem="2G1-jF-gzR" secondAttribute="top" id="ruQ-vc-0yX"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="yEG-RA-LIB"/>
                     </view>
+                    <connections>
+                        <outlet property="textViewPassword" destination="6fJ-v3-R2v" id="kn6-C0-TIU"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qh0-64-CzV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-25" y="691"/>
+            <point key="canvasLocation" x="-26.399999999999999" y="690.40479760119945"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="tYl-pA-t6v">
@@ -253,4 +266,7 @@
         <image name="44-512" width="512" height="512"/>
         <image name="securebg1" width="1080" height="1920"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="QMS-bf-sUi"/>
+    </inferredMetricsTieBreakers>
 </document>
